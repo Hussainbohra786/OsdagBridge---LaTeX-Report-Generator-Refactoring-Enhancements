@@ -1,6 +1,5 @@
 # Chapter 2: Input Parameters — exact LaTeX template match
 
-
 from osdagbridge.core.utils.common import (
     KEY_CARRIAGEWAY_WIDTH,
     KEY_CB_LOAD,
@@ -71,6 +70,8 @@ from osdagbridge.core.utils.common import (
 )
 
 from osdagbridge.core.reports.report_utils import _render_value, get_girder_entries, _tex
+from osdagbridge.core.reports.styles import build_longtable_header
+
 
 def ch2_input_parameters(m, input_dict, output_dict=None):
     girder_entries = get_girder_entries(input_dict)
@@ -96,68 +97,60 @@ This section documents all inputs provided to OsdagBridge. User-provided inputs 
 
 \noindent\textit{Note: These inputs are mandatory and were provided by the user.}
 
-\begin{table}[H]
-\caption{\textbf{Project Location}}
-\label{subsec:project-location}
-\begin{tabular}{|L{5.5cm}|L{8.5cm}|}
+""" + build_longtable_header(
+        "Project Location",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|L{8.5cm}|"
+    ) + r"""
+\textnormal{Project Location} & """ + _tex(m.project_location) + r""" \\[6pt]
 \hline
-\textbf{parameter} & \textbf{value} \\
+\textnormal{Latitude / Longitude} & """ + (_render_value(input_dict,'latitude')) + ', ' + (_render_value(input_dict,'longitude')) + r""" \\[6pt]
 \hline
-\textnormal{Project Location} & """ + _tex(m.project_location) + r""" \\
+\textnormal{Seismic Zone (IRC 6)} & """ + (_render_value(input_dict,'seismic_zone')) + r""" \\[6pt]
 \hline
-\textnormal{Latitude / Longitude} & """ + (_render_value(input_dict,'latitude')) + ', ' + (_render_value(input_dict,'longitude')) + r""" \\
+\textnormal{Basic Wind Speed (IRC 6)} & """ + (_render_value(input_dict,'wind_speed', ' m/s')) + r""" \\[6pt]
 \hline
-\textnormal{Seismic Zone (IRC 6)} & """ + (_render_value(input_dict,'seismic_zone')) + r""" \\
+\textnormal{Shade Temp. Max / Min (IRC 6)} & """ + (_render_value(input_dict,'shade_temp_max','')) + r""" °C / """ + (_render_value(input_dict,'shade_temp_min','')) + r""" °C \\[6pt]
 \hline
-\textnormal{Basic Wind Speed (IRC 6)} & """ + (_render_value(input_dict,'wind_speed', ' m/s')) + r""" \\
-\hline
-\textnormal{Shade Temp. Max / Min (IRC 6)} & """ + (_render_value(input_dict,'shade_temp_max','')) + r""" °C / """ + (_render_value(input_dict,'shade_temp_min','')) + r""" °C \\
-\hline
-\end{tabular}
-\vspace{0.4cm}
-\end{table}
+\end{longtable}
 
-\begin{table}[H]
-\caption{\textbf{Bridge Geometry}}
-\label{subsec:bridge-geometry}
-\begin{tabular}{|L{5.5cm}|L{8.5cm}|}
-\hline
-\textbf{parameter} & \textbf{value} \\
-\hline
-\textnormal{Type of Structure} & """ + (_render_value(input_dict, KEY_STRUCTURE_TYPE)) + r""" \\
-\hline
-\textnormal{Span (m)} & """ + (_render_value(input_dict, KEY_SPAN, ' m')) + r""" \\
-\hline
-\textnormal{Carriageway Width (m)} & """ + (_render_value(input_dict, KEY_CARRIAGEWAY_WIDTH, ' m')) + r""" \\
-\hline
-\textnormal{Include Median} & """ + (_render_value(input_dict, KEY_INCLUDE_MEDIAN)) + r""" \\
-\hline
-\textnormal{Footpath} & """ + (_render_value(input_dict, KEY_FOOTPATH)) + r""" \\
-\hline
-\textnormal{Skew Angle (degrees)} & """ + (_render_value(input_dict, KEY_SKEW_ANGLE, '°')) + r""" (IRC 24 Cl. 504.8 limit: $\pm$15°) \\
-\hline
-\end{tabular}
-\end{table}
 \vspace{0.4cm}
 
-\begin{table}[H]
-\caption{\textbf{Material Selection}}
-\label{subsec:material}
-\begin{tabular}{|L{5.5cm}|L{8.5cm}|}
+""" + build_longtable_header(
+        "Bridge Geometry",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|L{8.5cm}|"
+    ) + r"""
+\textnormal{Type of Structure} & """ + (_render_value(input_dict, KEY_STRUCTURE_TYPE)) + r""" \\[6pt]
 \hline
-\textbf{parameter} & \textbf{value} \\
+\textnormal{Span (m)} & """ + (_render_value(input_dict, KEY_SPAN, ' m')) + r""" \\[6pt]
 \hline
-\textnormal{Girder Steel Grade (IS 2062)} & """ + (_render_value(input_dict, KEY_GIRDER)) + r""" \\
+\textnormal{Carriageway Width (m)} & """ + (_render_value(input_dict, KEY_CARRIAGEWAY_WIDTH, ' m')) + r""" \\[6pt]
 \hline
-\textnormal{Cross Bracing Steel Grade} & """ + (_render_value(input_dict, KEY_CROSS_BRACING)) + r""" \\
+\textnormal{Include Median} & """ + (_render_value(input_dict, KEY_INCLUDE_MEDIAN)) + r""" \\[6pt]
 \hline
-\textnormal{End Diaphragm Steel Grade} & """ + (_render_value(input_dict, KEY_END_DIAPHRAGM)) + r""" \\
+\textnormal{Footpath} & """ + (_render_value(input_dict, KEY_FOOTPATH)) + r""" \\[6pt]
 \hline
-\textnormal{Concrete Deck Grade (IRC 22)} & """ + (_render_value(input_dict, KEY_DECK_CONCRETE_GRADE_BASIC)) + r""" \\
+\textnormal{Skew Angle (degrees)} & """ + (_render_value(input_dict, KEY_SKEW_ANGLE, '°')) + r""" (IRC 24 Cl. 504.8 limit: $\pm$15°) \\[6pt]
 \hline
-\end{tabular}
-\end{table}
+\end{longtable}
+
 \vspace{0.4cm}
+
+""" + build_longtable_header(
+        "Material Selection",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|L{8.5cm}|"
+    ) + r"""
+\textnormal{Girder Steel Grade (IS 2062)} & """ + (_render_value(input_dict, KEY_GIRDER)) + r""" \\[6pt]
+\hline
+\textnormal{Cross Bracing Steel Grade} & """ + (_render_value(input_dict, KEY_CROSS_BRACING)) + r""" \\[6pt]
+\hline
+\textnormal{End Diaphragm Steel Grade} & """ + (_render_value(input_dict, KEY_END_DIAPHRAGM)) + r""" \\[6pt]
+\hline
+\textnormal{Concrete Deck Grade (IRC 22)} & """ + (_render_value(input_dict, KEY_DECK_CONCRETE_GRADE_BASIC)) + r""" \\[6pt]
+\hline
+\end{longtable}
 
 \newpage
 \section{Additional Inputs}
@@ -167,11 +160,11 @@ Where the user has modified additional inputs, those values are reported here. W
 
 \vspace{0.8cm}
 
-\begin{longtable}{|L{5.5cm}|p{10.0cm}|}
-\caption{\textbf{Typical Section Details}}
-\hline
-\textbf{parameter} & \textbf{value} \\
-\hline
+""" + build_longtable_header(
+        "Typical Section Details",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|p{10.0cm}|"
+    ) + r"""
 \textnormal{Overall Bridge Width (m)} & """ + (_render_value(input_dict, KEY_TS_OVERALL_WIDTH)) + r""" \\[6pt]
 \hline
 \textnormal{No. of Girders} & """ + (_render_value(input_dict, KEY_TS_NO_OF_GIRDERS)) + r""" \\[6pt]
@@ -190,11 +183,11 @@ Where the user has modified additional inputs, those values are reported here. W
 
 \vspace{0.8em}
 
-\begin{longtable}{|L{5.5cm}|p{10.0cm}|}
-\caption{\textbf{Components Details}}
-\hline
-\textbf{parameter} & \textbf{value} \\
-\hline
+""" + build_longtable_header(
+        "Components Details",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|p{10.0cm}|"
+    ) + r"""
 \textnormal{Crash Barrier Type} & """ + (_render_value(input_dict, KEY_CB_TYPE)) + r""" \\[6pt]
 \hline
 \textnormal{Crash Barrier Load (kN/m)} & """ + (_render_value(input_dict, KEY_CB_LOAD)) + r""" \\[6pt]
@@ -220,10 +213,6 @@ Where the user has modified additional inputs, those values are reported here. W
 
 
 def _girder_tables(input_dict, n_girders):
-    # Fetch backend-populated labels via exact suffix pattern (defaults.py)
-    # KEY_MP_GD_SELECT_GIRDER.G{i}    = 'G{i}'
-    # KEY_MP_GD_MEMBER_ID.G{i}.M1     = 'G{i}M1'
-    # All other girder/stiffener keys: {BASE_KEY}.G{i}.M1
     n = n_girders if n_girders >= 1 else 1
     girder_entries = get_girder_entries(input_dict)
     if not girder_entries:
@@ -237,7 +226,6 @@ def _girder_tables(input_dict, n_girders):
         )
     ]
 
-    # Helper: one girder-dimension row
     def _dim_row(g_lbl, i):
         return (g_lbl + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_DEPTH}.G{i}.M1", ' mm'))
@@ -251,51 +239,48 @@ def _girder_tables(input_dict, n_girders):
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_BOTTOM_FLANGE_WIDTH}.G{i}.M1", ' mm'))
                 + ', '
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_BOTTOM_FLANGE_THICKNESS}.G{i}.M1", ' mm'))
-                + r""" \\[8pt]
+                + r""" \\[6pt]
 \hline
 """)
 
-    # Helper: one general-info row
     def _gen_row(g_lbl, m_id, i):
         return (g_lbl + r""" & """ + m_id + r""" & """
-                + (_render_value(input_dict, KEY_DESIGN_MODE))
+                + (_render_value(input_dict, f"{KEY_DESIGN_MODE}.G{i}.M1"))
                 + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_TYPE}.G{i}.M1"))
                 + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_SYMMETRY}.G{i}.M1"))
-                + r""" \\[8pt]
+                + r""" \\[6pt]
 \hline
 """)
 
-    # Helper: one restraint/stiffener row
     def _rst_row(g_lbl, i):
+        int_stiff_enabled = str(input_dict.get(f"{KEY_MP_STIFFENER_INTERMEDIATE}.G{i}.M1", "yes")).strip().lower() in ("yes", "true", "1")
+        int_thk = _render_value(input_dict, f"{KEY_MP_STIFFENER_INTERMEDIATE_THICKNESS}.G{i}.M1", ' mm') if int_stiff_enabled else "N/A"
+        int_spc = _render_value(input_dict, f"{KEY_MP_STIFFENER_INTERMEDIATE_SPACING}.G{i}.M1", ' mm') if int_stiff_enabled else "N/A"
+
+        long_stiff_enabled = str(input_dict.get(f"{KEY_MP_STIFFENER_LONGITUDINAL}.G{i}.M1", "no")).strip().lower() in ("yes", "true", "1")
+        long_stiff = "Provided" if long_stiff_enabled else "None"
+
         return (g_lbl + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_TORSIONAL_RESTRAINT}.G{i}.M1"))
-                + ', '
+                + r""" / """
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_WARPING_RESTRAINT}.G{i}.M1"))
                 + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_GIRDER_WEB_TYPE}.G{i}.M1"))
                 + r""" & """
-                + (_render_value(input_dict, f"{KEY_MP_STIFFENER_INTERMEDIATE}.G{i}.M1"))
-                + '; Spacing: '
-                + (_render_value(input_dict, f"{KEY_MP_STIFFENER_INTERMEDIATE_SPACING}.G{i}.M1", ' mm'))
-                + '; Thickness: '
-                + (_render_value(input_dict, f"{KEY_MP_STIFFENER_INTERMEDIATE_THICKNESS}.G{i}.M1", ' mm'))
+                + f"t = {int_thk}, s = {int_spc}"
                 + r""" & """
-                + (_render_value(input_dict, f"{KEY_MP_STIFFENER_LONGITUDINAL}.G{i}.M1"))
-                + r""" & No.: """
-                + (_render_value(input_dict, f"{KEY_MP_STIFFENER_NO_BEARING_STIFFENERS}.G{i}.M1"))
-                + '; Spacing: '
-                + (_render_value(input_dict, f"{KEY_MP_STIFFENER_SPACING}.G{i}.M1", ' mm'))
-                + '; Thickness: '
+                + long_stiff
+                + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_STIFFENER_BEARING_THICKNESS}.G{i}.M1", ' mm'))
-                + r""" \\[8pt]
+                + r""" \\[6pt]
 \hline
 """)
 
-    gen_rows = "".join([_gen_row(g_lbl, m_id, i) for g_lbl, m_id, i in entries_for_table])
-    dim_rows = "".join([_dim_row(g_lbl, i) for g_lbl, _, i in entries_for_table])
-    rst_rows = "".join([_rst_row(g_lbl, i) for g_lbl, _, i in entries_for_table])
+    dim_rows = "".join([_dim_row(lbl, i) for lbl, mid, i in entries_for_table])
+    gen_rows = "".join([_gen_row(lbl, mid, i) for lbl, mid, i in entries_for_table])
+    rst_rows = "".join([_rst_row(lbl, i) for lbl, mid, i in entries_for_table])
 
     return (r"""
 \newpage
@@ -304,41 +289,29 @@ def _girder_tables(input_dict, n_girders):
 \noindent
             
 \vspace{4pt}
-\begin{longtable}{|L{2.2cm}|L{1.8cm}|p{3.8cm}|p{3.8cm}|p{3.8cm}|}
-\caption{\textbf{Girder General Information}}
-\hline
-\textbf{Girder} & \textbf{Member ID} & \textbf{Design Mode} & \textbf{Girder Type} & \textbf{Girder Symmetry} \\[6pt]
-\hline
-"""
-            + gen_rows
-            + r"""\end{longtable}
+""" + build_longtable_header(
+        "Girder General Information",
+        r"\textbf{Girder} & \textbf{Member ID} & \textbf{Design Mode} & \textbf{Girder Type} & \textbf{Girder Symmetry} \\[6pt]",
+        r"|L{2.2cm}|L{1.8cm}|p{3.8cm}|p{3.8cm}|p{3.8cm}|"
+    ) + gen_rows + r"""\end{longtable}
 
 \vspace{0.6em}
 
 \vspace{4pt}
-\begin{longtable}{|L{1.8cm}|L{2.3cm}|L{1.8cm}|p{4.8cm}|p{4.8cm}|}
-\caption{\textbf{Girder Section Dimensions}}
-\hline
-\textbf{Girder} & \textbf{Total Depth, D (mm)} & \textbf{Web, $t_w$ (mm)} & \textbf{Top Flange (b\textsubscript{tf}, t\textsubscript{tf}) mm} & \textbf{Bottom Flange (b\textsubscript{bf}, t\textsubscript{bf}) mm} \\[6pt]
-\hline
-"""
-            + dim_rows
-            + r"""\end{longtable}
+""" + build_longtable_header(
+        "Girder Section Dimensions",
+        r"\textbf{Girder} & \textbf{Total Depth, D (mm)} & \textbf{Web, $t_w$ (mm)} & \textbf{Top Flange (b\textsubscript{tf}, t\textsubscript{tf}) mm} & \textbf{Bottom Flange (b\textsubscript{bf}, t\textsubscript{bf}) mm} \\[6pt]",
+        r"|L{1.8cm}|L{2.3cm}|L{1.8cm}|p{4.8cm}|p{4.8cm}|"
+    ) + dim_rows + r"""\end{longtable}
 
 \vspace{0.6em}
 
 \vspace{4pt}
-\begin{longtable}{|L{1.4cm}|p{2.2cm}|p{2.2cm}|p{3.0cm}|p{2.4cm}|p{2.2cm}|}
-\caption{\textbf{Girder Restraint and Stiffener Details}}\\
-\hline
-\textbf{Girder} & \textbf{Torsional / Warping Restraint} & \textbf{Web Philosophy} & \textbf{Intermediate Stiffeners} & \textbf{Longitudinal Stiffeners} & \textbf{Bearing Stiffener} \\[6pt]
-\hline
-\endfirsthead
-\endhead
-
-"""
-            + rst_rows
-            + r"""\end{longtable}
+""" + build_longtable_header(
+        "Girder Restraint and Stiffener Details",
+        r"\textbf{Girder} & \textbf{Torsional / Warping Restraint} & \textbf{Web Philosophy} & \textbf{Intermediate Stiffeners} & \textbf{Longitudinal Stiffeners} & \textbf{Bearing Stiffener} \\[6pt]",
+        r"|L{1.4cm}|p{2.2cm}|p{2.2cm}|p{3.0cm}|p{2.4cm}|p{2.2cm}|"
+    ) + rst_rows + r"""\end{longtable}
 """)
 
 
@@ -355,7 +328,6 @@ def _bracing_tables(input_dict, n_girders):
         for i in range(1, n)
     ]
 
-    # Helper: one cross-bracing row (all locations share same bracing config)
     def _cb_row(location, member_ids, i):
         return (location + r""" & """ + member_ids + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_CB_TYPE}.G{i}G{i+1}.B{i}M1"))
@@ -367,7 +339,6 @@ def _bracing_tables(input_dict, n_girders):
 \hline
 """)
 
-    # Helper: one end-diaphragm row (all locations share same config)
     def _ed_row(location, member_ids, i):
         return (location + r""" & """ + member_ids + r""" & """
                 + (_render_value(input_dict, f"{KEY_MP_ED_TYPE}.G{i}G{i+1}.E{i}M1"))
@@ -388,14 +359,11 @@ def _bracing_tables(input_dict, n_girders):
 \setlength\LTleft{0pt}
 \setlength\LTright{\fill}
 
-\begin{longtable}{|L{2.2cm}|L{2.2cm}|L{3.0cm}|L{2.5cm}|C{1.8cm}|C{1.8cm}|}
-\caption{\textbf{Member Properties: Cross Bracing Details}}
-\hline
-\textbf{Location} & \textbf{Member IDs} & \textbf{Type of Bracing} & \textbf{Bracing Section} & \textbf{Spacing (m)} \\
-\hline
-"""
-+ cb_rows
-+ r"""\end{longtable}
+""" + build_longtable_header(
+        "Member Properties: Cross Bracing Details",
+        r"\textbf{Location} & \textbf{Member IDs} & \textbf{Type of Bracing} & \textbf{Bracing Section} & \textbf{Spacing (m)} \\[6pt]",
+        r"|L{2.2cm}|L{2.2cm}|L{3.0cm}|L{2.5cm}|C{1.8cm}|"
+    ) + cb_rows + r"""\end{longtable}
 
 \vspace{0.4em}
 \noindent
@@ -403,19 +371,15 @@ def _bracing_tables(input_dict, n_girders):
 \setlength\LTleft{0pt}
 \setlength\LTright{\fill}
 
-\begin{longtable}{|L{2.2cm}|L{2.2cm}|L{3.0cm}|L{2.5cm}|C{1.8cm}|C{1.8cm}|}
-\caption{\textbf{Member Properties: End Diaphragm Details}}
-\hline
-\textbf{Location} & \textbf{Member IDs} & \textbf{Type of Bracing} & \textbf{Bracing Section} \\
-\hline
-"""
-+ ed_rows
-+ r"""\end{longtable}
+""" + build_longtable_header(
+        "Member Properties: End Diaphragm Details",
+        r"\textbf{Location} & \textbf{Member IDs} & \textbf{Type of Bracing} & \textbf{Bracing Section} \\[6pt]",
+        r"|L{2.2cm}|L{2.2cm}|L{3.0cm}|L{2.5cm}|"
+    ) + ed_rows + r"""\end{longtable}
 """)
 
 
 def _shear_connector_table(input_dict, output_dict=None):
-    # Stud computed properties live in output_dict (populated by store_design_results)
     od = output_dict or {}
     return r"""
 \label{subsec:shear-connectors}
@@ -423,11 +387,11 @@ def _shear_connector_table(input_dict, output_dict=None):
 \vspace{2.2em}
 
 \vspace{0.4em}
-\begin{longtable}{|L{5.5cm}|p{10.0cm}|}
-\caption{\textbf{Shear Connector Details}}
-\hline
-\textbf{parameter} & \textbf{value} \\
-\hline
+""" + build_longtable_header(
+        "Shear Connector Details",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|p{10.0cm}|"
+    ) + r"""
 \textnormal{Stud Diameter (mm)} & """ + (_render_value(od, KEY_SD_SHEAR_DIAMETER, ' mm')) + r""" \\[6pt]
 \hline
 \textnormal{Stud Height (mm)} & """ + (_render_value(od, KEY_SD_SHEAR_HEIGHT, ' mm')) + r""" \\[6pt]
@@ -441,6 +405,7 @@ def _shear_connector_table(input_dict, output_dict=None):
 \end{longtable}
 """
 
+
 def _safety_factors_table(input_dict):
     return r"""
 \label{subsec:safety-factors}
@@ -451,25 +416,24 @@ def _safety_factors_table(input_dict):
 \noindent\textit{Note: All values are per IRC 22 Table 1 unless user-modified.}
 
 \vspace{0.4em}
-\begin{longtable}{|L{5.5cm}|p{10.0cm}|}
-\caption{\textbf{Partial Safety Factors}}
-\hline
-\textbf{parameter} & \textbf{value} \\
-\hline
+""" + build_longtable_header(
+        "Partial Safety Factors",
+        r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+        r"|L{5.5cm}|p{10.0cm}|"
+    ) + r"""
 \textnormal{$\gamma_{M0}$ (Yielding / Buckling)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_M0)) + r""" \\[6pt]
 \hline
-\textnormal{$\gamma_{M1}$ (Ultimate Stress)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_M1)) + r""" \\[6pt]
+\textnormal{$\gamma_{M1}$ (Ultimate Resistance)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_M1)) + r""" \\[6pt]
 \hline
-\textnormal{$\gamma_C$ (Concrete, Basic)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_C_BASIC)) + r""" \\[6pt]
+\textnormal{$\gamma_{MF}$ (Fatigue)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_MF)) + r""" \\[6pt]
 \hline
-\textnormal{$\gamma_s$ (Reinforcement)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_S)) + r""" \\[6pt]
+\textnormal{$\gamma_S$ (Steel Component)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_S)) + r""" \\[6pt]
 \hline
-\textnormal{$\gamma_v$ (Shear Connectors)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_V)) + r""" \\[6pt]
+\textnormal{$\gamma_C$ (Concrete Component)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_C_BASIC)) + r""" \\[6pt]
 \hline
-\textnormal{$\gamma_{fft}$ (Fatigue Load)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_FLT)) + r""" \\[6pt]
+\textnormal{$\gamma_V$ (Shear Connectors)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_V)) + r""" \\[6pt]
 \hline
-\textnormal{$\gamma_{Mft}$ (Fatigue Strength)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_MF)) + r""" \\[6pt]
+\textnormal{$\gamma_{FLT}$ (Lateral Torsional Buckling)} & """ + (_render_value(input_dict, KEY_DO_GAMMA_FLT)) + r""" \\[6pt]
 \hline
 \end{longtable}
 """
-

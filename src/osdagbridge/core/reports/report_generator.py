@@ -152,11 +152,16 @@ def preamble(project_name, job_number, report_date, report_version='Rev 0'):
     jn = _tex(job_number)
     rd = _tex(report_date)
     rv = _tex(report_version)
+    # Import geometry options from styles.py for consistent layout
+    from osdagbridge.core.reports.styles import build_geometry_options, build_table_preamble_commands
+    geom_opts = build_geometry_options()
+    table_cmds = build_table_preamble_commands()
+
     return r"""
 \documentclass[12pt,a4paper]{report}
 
 % Packages
-\usepackage[a4paper, margin=1in]{geometry}
+\usepackage[""" + geom_opts + r"""]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -192,20 +197,8 @@ def preamble(project_name, job_number, report_date, report_version='Rev 0'):
 
 \numberwithin{table}{chapter}
 \numberwithin{figure}{chapter}
-% Table layout and spacing: consistent padding, row height, and longtable pre/post skips
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\LTpre}{0pt}
-\setlength{\LTpost}{6pt}
-% Table rules (outline thickness) and small extra row height for clarity
-\setlength{\arrayrulewidth}{0.5pt}
-\setlength{\extrarowheight}{0.6pt}
-
-% Prevent tables from overflowing past the page bottom:
-% if fewer than 5 baseline-skips remain, break to the next page first.
-\BeforeBeginEnvironment{table}{\needspace{5\baselineskip}}
-\BeforeBeginEnvironment{longtable}{\needspace{5\baselineskip}}
-
+% ── Table layout: centralised via styles.py ──────────────────────────────
+""" + table_cmds + r"""
 \definecolor{osdagGreen}{HTML}{91B014}
 
 \fancypagestyle{main}{
@@ -899,6 +892,17 @@ def generate_report(payload, request):
             quantities = calculate_material_quantities(payload.inputs, payload.output_dict)
             payload.inputs.update(quantities)
 
+            # ── Generate dynamic charts (UR + Material) ──────────────────────
+            temp_assets = os.path.join(tmp_dir, "temp_assets")
+            os.makedirs(temp_assets, exist_ok=True)
+
+            ur_chart_path = None
+            try:
+                from osdagbridge.core.reports.chart_generator import generate_ur_chart
+                ur_chart_path = generate_ur_chart(payload.output_dict, temp_assets)
+            except Exception as _ce:
+                logger.warning("UR chart generation failed: %s", _ce)
+
             # ── Assemble LaTeX document (fig_paths now has tmp_dir paths) ──
             bridge = ReportDataBridge(payload.output_dict, payload.inputs, payload)
             span_m = float(payload.inputs.get(KEY_SPAN, 0) or 0)
@@ -924,11 +928,11 @@ def generate_report(payload, request):
             if 'analysis' in secs:
                 doc_parts.append(ch4_analysis(payload.analysis_summary, fig_paths, bridge, span_m))
             if 'design_checks' in secs:
-                doc_parts.append(ch5_design_checks(payload.design_checks, bridge))
-            if 'drawings' in secs and payload.options.include_figures:
-                doc_parts.append(ch6_drawings(fig_paths))
+                doc_parts.append(ch5_design_checks(payload.design_checks, bridge,
+                                                   ur_chart_path=ur_chart_path))
+            if 'drawings' in secs and payload.options.include_figures:                doc_parts.append(ch6_drawings(fig_paths))
 
-            doc_parts.append(ch7_quantities(payload.inputs))
+            doc_parts.append(ch7_quantities(payload.inputs, payload.output_dict, temp_assets))
 
             mode = str(payload.inputs.get(KEY_DESIGN_MODE, "Optimized")).strip().lower()
             is_custom = mode in {"custom", "customized"}

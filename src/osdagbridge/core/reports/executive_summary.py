@@ -3,6 +3,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from osdagbridge.core.reports.report_utils import _fig_or_placeholder, _render_value, _tex, get_girder_entries
+from osdagbridge.core.reports.styles import build_longtable_header
 from osdagbridge.core.utils.common import (
     KEY_CARRIAGEWAY_WIDTH,
     KEY_SD_SECTION_DESIGNATION,
@@ -189,30 +190,32 @@ This section provides a concise summary of the bridge design, key inputs, govern
 \addcontentsline{toc}{section}{Project Overview}
 \label{sec:project-overview}
 
-
-\begin{tabular}{|L{5.5cm}|L{8.5cm}|}
+""" + build_longtable_header(
+    "Project Overview",
+    r"\textbf{Parameter} & \textbf{Value} \\[6pt]",
+    r"|L{5.5cm}|L{8.5cm}|"
+) + r"""
+\textbf{Bridge Type} & """ + (_render_value(input_dict, KEY_STRUCTURE_TYPE)) + r""" \\[6pt]
 \hline
-\textbf{Bridge Type} & """ + (_render_value(input_dict, KEY_STRUCTURE_TYPE)) + r""" \\
+\textbf{Design Standard} & IRC 5, IRC 6, IRC 22, IRC 24, IS 800 \\[6pt]
 \hline
-\textbf{Design Standard} & IRC 5, IRC 6, IRC 22, IRC 24, IS 800 \\
+\textbf{Span} & """ + (_render_value(input_dict, KEY_SPAN, ' m')) + r""" \\[6pt]
 \hline
-\textbf{Span} & """ + (_render_value(input_dict, KEY_SPAN, ' m')) + r""" \\
+\textbf{Carriageway Width} & """ + (_render_value(input_dict, KEY_CARRIAGEWAY_WIDTH, ' m')) + r""" \\[6pt]
 \hline
-\textbf{Carriageway Width} & """ + (_render_value(input_dict, KEY_CARRIAGEWAY_WIDTH, ' m')) + r""" \\
+\textbf{No. of Girders} & """ + (_render_value(input_dict, KEY_TS_NO_OF_GIRDERS)) + r""" \\[6pt]
 \hline
-\textbf{No. of Girders} & """ + (_render_value(input_dict, KEY_TS_NO_OF_GIRDERS)) + r""" \\
+\textbf{Girder Spacing} & """ + (_render_value(input_dict, KEY_TS_GIRDER_SPACING)) + r""" \\[6pt]
 \hline
-\textbf{Girder Spacing} & """ + (_render_value(input_dict, KEY_TS_GIRDER_SPACING)) + r""" \\
+\textbf{Deck Thickness} & """ + (_render_value(input_dict, KEY_TS_DECK_THICKNESS)) + r""" \\[6pt]
 \hline
-\textbf{Deck Thickness} & """ + (_render_value(input_dict, KEY_TS_DECK_THICKNESS)) + r""" \\
+\textbf{Overall Design Status} & """ + (_tex(overall_design_status)) + r""" \\[6pt]
 \hline
-\textbf{Overall Design Status} & """ + (_tex(overall_design_status)) + r""" \\
+\textbf{Governing Check} & """ + gov + r""" \\[6pt]
 \hline
-\textbf{Governing Check} & """ + gov + r""" \\
+\textbf{Overall Utilization Ratio (max)} & """ + ur + r""" \\[6pt]
 \hline
-\textbf{Overall Utilization Ratio (max)} & """ + ur + r""" \\
-\hline
-\end{tabular}
+\end{longtable}
 
 
 """ + plan_fig + r"""
