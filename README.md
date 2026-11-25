@@ -163,6 +163,12 @@ Continuous integration runs automatically through GitHub Actions (`.github/workf
 
 ---
 
+## Images 
+<img width="1919" height="1024" alt="Screenshot 2026-11-22 193613" src="https://github.com/user-attachments/assets/1ed6119d-1314-4d70-88a8-4215146ca166" />
+<img width="1919" height="1021" alt="Screenshot 2026-11-22 191827" src="https://github.com/user-attachments/assets/50d18440-1d9e-40de-aa18-8d1bf5871e9b" />
+<img width="1919" height="1007" alt="Screenshot 2026-11-22 190856" src="https://github.com/user-attachments/assets/02755bba-8077-4097-8cc6-f650f9d6bad5" />
+
+
 ## Acknowledgements
 
 OsdagBridge is part of the Osdag project, promoting open-source tools for steel design education, research, and practice.
